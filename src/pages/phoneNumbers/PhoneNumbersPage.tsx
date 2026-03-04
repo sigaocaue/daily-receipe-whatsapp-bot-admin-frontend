@@ -38,7 +38,7 @@ export default function PhoneNumbersPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
   function handleNew() {
@@ -59,7 +59,7 @@ export default function PhoneNumbersPage() {
       await createPhoneNumber(data);
       toast.success("Número criado!");
     }
-    load();
+    await load();
   }
 
   async function handleDelete() {
@@ -67,7 +67,7 @@ export default function PhoneNumbersPage() {
     try {
       await deletePhoneNumber(deleteTarget.id);
       toast.success("Número removido!");
-      load();
+      await load();
     } catch {
       // handled by interceptor
     } finally {
