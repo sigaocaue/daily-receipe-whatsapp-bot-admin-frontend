@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,15 +16,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { listProteins, createProtein, updateProtein, deleteProtein } from "@/api/proteins";
+import { listProteins, deleteProtein } from "@/api/proteins";
 import type { Protein } from "@/types/protein";
-import ProteinForm from "./ProteinForm";
 
 export default function ProteinsPage() {
+  const navigate = useNavigate();
   const [proteins, setProteins] = useState<Protein[]>([]);
   const [loading, setLoading] = useState(true);
-  const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Protein | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Protein | null>(null);
 
   const load = useCallback(async () => {
@@ -42,24 +41,11 @@ export default function ProteinsPage() {
   }, [load]);
 
   function handleNew() {
-    setEditing(null);
-    setFormOpen(true);
+    navigate("/proteins/new");
   }
 
   function handleEdit(protein: Protein) {
-    setEditing(protein);
-    setFormOpen(true);
-  }
-
-  async function handleFormSubmit(data: { name: string; active: boolean }) {
-    if (editing) {
-      await updateProtein(editing.id, data);
-      toast.success("Proteína atualizada!");
-    } else {
-      await createProtein(data);
-      toast.success("Proteína criada!");
-    }
-    await load();
+    navigate(`/proteins/${protein.id}/edit`);
   }
 
   async function handleDelete() {
@@ -133,13 +119,6 @@ export default function ProteinsPage() {
           </TableBody>
         </Table>
       )}
-
-      <ProteinForm
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        protein={editing}
-        onSubmit={handleFormSubmit}
-      />
 
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,9 +16,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { listPhoneNumbers, createPhoneNumber, updatePhoneNumber, deletePhoneNumber } from "@/api/phoneNumbers";
+import { listPhoneNumbers, deletePhoneNumber } from "@/api/phoneNumbers";
 import type { PhoneNumber } from "@/types/phoneNumber";
-import PhoneNumberForm from "./PhoneNumberForm";
 
 type CountryDisplay = {
   code: string;
@@ -56,10 +56,9 @@ function formatPhoneForTable(phone: string) {
 }
 
 export default function PhoneNumbersPage() {
+  const navigate = useNavigate();
   const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([]);
   const [loading, setLoading] = useState(true);
-  const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<PhoneNumber | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<PhoneNumber | null>(null);
 
   const load = useCallback(async () => {
@@ -78,24 +77,11 @@ export default function PhoneNumbersPage() {
   }, [load]);
 
   function handleNew() {
-    setEditing(null);
-    setFormOpen(true);
+    navigate("/phone-numbers/new");
   }
 
   function handleEdit(pn: PhoneNumber) {
-    setEditing(pn);
-    setFormOpen(true);
-  }
-
-  async function handleFormSubmit(data: { name: string; phone: string; active: boolean }) {
-    if (editing) {
-      await updatePhoneNumber(editing.id, data);
-      toast.success("Número atualizado!");
-    } else {
-      await createPhoneNumber(data);
-      toast.success("Número criado!");
-    }
-    await load();
+    navigate(`/phone-numbers/${pn.id}/edit`);
   }
 
   async function handleDelete() {
@@ -171,13 +157,6 @@ export default function PhoneNumbersPage() {
           </TableBody>
         </Table>
       )}
-
-      <PhoneNumberForm
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        phoneNumber={editing}
-        onSubmit={handleFormSubmit}
-      />
 
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
