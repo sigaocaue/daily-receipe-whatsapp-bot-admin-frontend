@@ -14,7 +14,7 @@ const defaultTitle = "Daily Recipe - Admin";
 
 export function Header() {
   const { pathname } = useLocation();
-  const title = titles[pathname] || defaultTitle;
+  const title = getPageTitle(pathname);
 
   useEffect(() => {
     document.title = title;
@@ -25,4 +25,16 @@ export function Header() {
       <h1 className="text-xl font-semibold">{title}</h1>
     </header>
   );
+}
+
+function getPageTitle(pathname: string) {
+  if (pathname === "/recipes/new") {
+    return "Nova Receita";
+  }
+
+  if (/^\/recipes\/[^/]+\/edit$/.test(pathname)) {
+    return "Editar Receita";
+  }
+
+  return titles[pathname] || defaultTitle;
 }

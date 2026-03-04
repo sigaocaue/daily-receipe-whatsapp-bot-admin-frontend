@@ -43,7 +43,7 @@ export default function Dashboard() {
         setLoading(false);
       }
     }
-    load();
+    void load();
   }, []);
 
   async function handleGenerate() {
@@ -76,7 +76,7 @@ export default function Dashboard() {
   const summaryCards = [
     { title: "Proteínas", value: counts.proteins, icon: Beef, color: "text-orange-500" },
     { title: "Receitas", value: counts.recipes, icon: BookOpen, color: "text-green-500" },
-    { title: "Números", value: counts.phones, icon: Phone, color: "text-blue-500" },
+    { title: "Números de telefones cadastrados", value: counts.phones, icon: Phone, color: "text-blue-500" },
     { title: "Mensagens", value: counts.messages, icon: MessageSquare, color: "text-purple-500" },
   ];
 

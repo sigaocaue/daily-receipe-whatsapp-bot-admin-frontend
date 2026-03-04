@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Plus, Pencil, Trash2, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,18 +16,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { listRecipes, createRecipe, updateRecipe, deleteRecipe, generateRecipe } from "@/api/recipes";
+import { listRecipes, deleteRecipe, generateRecipe } from "@/api/recipes";
 import { listProteins } from "@/api/proteins";
 import type { Recipe } from "@/types/recipe";
 import type { Protein } from "@/types/protein";
-import RecipeForm from "./RecipeForm";
 
 export default function RecipesPage() {
+  const navigate = useNavigate();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [proteins, setProteins] = useState<Protein[]>([]);
   const [loading, setLoading] = useState(true);
-  const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Recipe | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Recipe | null>(null);
   const [generating, setGenerating] = useState(false);
 
@@ -43,7 +42,7 @@ export default function RecipesPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
   function proteinNames(ids: string[]) {
@@ -54,24 +53,11 @@ export default function RecipesPage() {
   }
 
   function handleNew() {
-    setEditing(null);
-    setFormOpen(true);
+    navigate("/recipes/new");
   }
 
   function handleEdit(recipe: Recipe) {
-    setEditing(recipe);
-    setFormOpen(true);
-  }
-
-  async function handleFormSubmit(data: Omit<Recipe, "id" | "created_at" | "updated_at">) {
-    if (editing) {
-      await updateRecipe(editing.id, data);
-      toast.success("Receita atualizada!");
-    } else {
-      await createRecipe(data);
-      toast.success("Receita criada!");
-    }
-    load();
+    navigate(`/recipes/${recipe.id}/edit`);
   }
 
   async function handleDelete() {
@@ -79,7 +65,7 @@ export default function RecipesPage() {
     try {
       await deleteRecipe(deleteTarget.id);
       toast.success("Receita removida!");
-      load();
+      await load();
     } catch {
       // handled by interceptor
     } finally {
@@ -92,7 +78,7 @@ export default function RecipesPage() {
     try {
       const recipe = await generateRecipe();
       toast.success(`Receita "${recipe.title}" gerada!`);
-      load();
+      await load();
     } catch {
       // handled by interceptor
     } finally {
@@ -168,13 +154,6 @@ export default function RecipesPage() {
           </TableBody>
         </Table>
       )}
-
-      <RecipeForm
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        recipe={editing}
-        onSubmit={handleFormSubmit}
-      />
 
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
