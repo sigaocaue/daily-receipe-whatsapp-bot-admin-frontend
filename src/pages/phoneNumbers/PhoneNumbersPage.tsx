@@ -19,6 +19,42 @@ import { listPhoneNumbers, createPhoneNumber, updatePhoneNumber, deletePhoneNumb
 import type { PhoneNumber } from "@/types/phoneNumber";
 import PhoneNumberForm from "./PhoneNumberForm";
 
+type CountryDisplay = {
+  code: string;
+  flag: string;
+  dialCode: string;
+};
+
+const COUNTRY_DISPLAY: CountryDisplay[] = [
+  { code: "BR", flag: "🇧🇷", dialCode: "+55" },
+  { code: "AR", flag: "🇦🇷", dialCode: "+54" },
+  { code: "CL", flag: "🇨🇱", dialCode: "+56" },
+  { code: "CO", flag: "🇨🇴", dialCode: "+57" },
+  { code: "ES", flag: "🇪🇸", dialCode: "+34" },
+  { code: "MX", flag: "🇲🇽", dialCode: "+52" },
+  { code: "PT", flag: "🇵🇹", dialCode: "+351" },
+  { code: "US", flag: "🇺🇸", dialCode: "+1" },
+];
+
+function formatPhoneForTable(phone: string) {
+  const normalized = phone.trim();
+  const country =
+    COUNTRY_DISPLAY
+      .slice()
+      .sort((a, b) => b.dialCode.length - a.dialCode.length)
+      .find((item) => normalized.startsWith(item.dialCode)) ?? null;
+
+  const dialCode = country?.dialCode ?? "+";
+  const digitsWithoutDdi = normalized.startsWith(dialCode)
+    ? normalized.slice(dialCode.length).replace(/\D/g, "")
+    : normalized.replace(/\D/g, "");
+
+  const ddd = digitsWithoutDdi.slice(0, 2);
+  const localNumber = digitsWithoutDdi.slice(2);
+
+  return `${country?.flag ?? "🌐"} ${dialCode} ${ddd}${localNumber ? ` ${localNumber}` : ""}`.trim();
+}
+
 export default function PhoneNumbersPage() {
   const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,7 +148,7 @@ export default function PhoneNumbersPage() {
               phoneNumbers.map((pn) => (
                 <TableRow key={pn.id}>
                   <TableCell className="font-medium">{pn.name}</TableCell>
-                  <TableCell>{pn.phone}</TableCell>
+                  <TableCell>{formatPhoneForTable(pn.phone)}</TableCell>
                   <TableCell>
                     <Badge variant={pn.active ? "default" : "secondary"}>
                       {pn.active ? "Ativo" : "Inativo"}
