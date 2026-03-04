@@ -108,7 +108,7 @@ export default function RecipesPage() {
           ))}
         </div>
       ) : (
-        <Table className="min-w-[760px]">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Título</TableHead>

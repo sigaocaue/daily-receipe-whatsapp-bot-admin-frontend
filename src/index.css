@@ -47,5 +47,17 @@
     select {
       font-size: 16px;
     }
+
+    /* Prevent horizontal scroll on mobile */
+    body,
+    html {
+      overflow-x: hidden;
+    }
+
+    /* Ensure dialogs don't overflow */
+    [role="dialog"] {
+      max-width: 95vw;
+      margin: auto;
+    }
   }
 }

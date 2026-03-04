@@ -91,7 +91,7 @@ export default function ProteinsPage() {
           ))}
         </div>
       ) : (
-        <Table className="min-w-[640px]">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>

@@ -56,7 +56,7 @@ export default function MessageLogsPage() {
           ))}
         </div>
       ) : (
-        <Table className="min-w-[860px]">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Data</TableHead>

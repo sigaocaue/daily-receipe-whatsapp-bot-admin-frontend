@@ -60,7 +60,7 @@ export default function ProteinForm({ open, onOpenChange, protein, onSubmit }: P
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="w-[95vw] sm:w-full">
         <DialogHeader>
           <DialogTitle>{protein ? "Editar Proteína" : "Nova Proteína"}</DialogTitle>
           <DialogDescription>

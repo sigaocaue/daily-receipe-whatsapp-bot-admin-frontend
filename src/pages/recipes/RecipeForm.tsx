@@ -118,7 +118,7 @@ export default function RecipeForm({ open, onOpenChange, recipe, onSubmit }: Rec
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+      <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{recipe ? "Editar Receita" : "Nova Receita"}</DialogTitle>
           <DialogDescription>

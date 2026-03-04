@@ -127,7 +127,7 @@ export default function PhoneNumbersPage() {
           ))}
         </div>
       ) : (
-        <Table className="min-w-[700px]">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>

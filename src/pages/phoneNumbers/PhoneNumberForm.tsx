@@ -141,7 +141,7 @@ export default function PhoneNumberForm({ open, onOpenChange, phoneNumber, onSub
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-      <DialogContent>
+      <DialogContent className="w-[95vw] sm:w-full">
         <DialogHeader>
           <DialogTitle>{phoneNumber ? "Editar Número" : "Novo Número"}</DialogTitle>
           <DialogDescription>
@@ -156,9 +156,9 @@ export default function PhoneNumberForm({ open, onOpenChange, phoneNumber, onSub
           </div>
           <div className="space-y-2">
             <Label htmlFor="phoneLocal">Telefone</Label>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-col sm:flex-row">
               <Select value={selectedCountryCode} onValueChange={setSelectedCountryCode}>
-                <SelectTrigger className="w-[120px] shrink-0">
+                <SelectTrigger className="w-full sm:w-[120px] shrink-0">
                   <SelectValue placeholder="Selecione o país" />
                 </SelectTrigger>
                 <SelectContent>
