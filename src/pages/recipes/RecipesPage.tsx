@@ -88,14 +88,14 @@ export default function RecipesPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-semibold">Receitas</h2>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={handleGenerate} disabled={generating}>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Button variant="secondary" onClick={handleGenerate} disabled={generating} className="w-full sm:w-auto">
             <Sparkles className="mr-2 h-4 w-4" />
             {generating ? "Gerando..." : "Gerar via IA"}
           </Button>
-          <Button onClick={handleNew}>
+          <Button onClick={handleNew} className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" /> Nova Receita
           </Button>
         </div>
@@ -108,7 +108,7 @@ export default function RecipesPage() {
           ))}
         </div>
       ) : (
-        <Table>
+        <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow>
               <TableHead>Título</TableHead>

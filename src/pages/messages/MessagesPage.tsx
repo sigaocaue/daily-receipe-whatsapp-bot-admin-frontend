@@ -127,7 +127,7 @@ export default function MessagesPage() {
           <div className="space-y-2">
             <Label>Modo de envio</Label>
             <Select value={mode} onValueChange={(v) => setMode(v as SendMode)}>
-              <SelectTrigger className="w-[280px]">
+              <SelectTrigger className="w-full sm:w-[280px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -217,12 +217,12 @@ export default function MessagesPage() {
             </div>
           )}
 
-          <div className="flex items-center gap-3 pt-2">
-            <Button onClick={handleSend} disabled={sending}>
+          <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:gap-3">
+            <Button onClick={handleSend} disabled={sending} className="w-full sm:w-auto">
               <Send className="mr-2 h-4 w-4" />
               {sending ? "Enviando..." : "Enviar receita do dia agora"}
             </Button>
-            <Button variant="outline" onClick={() => navigate("/messages/logs")}>
+            <Button variant="outline" onClick={() => navigate("/messages/logs")} className="w-full sm:w-auto">
               <List className="mr-2 h-4 w-4" />
               Ver logs
             </Button>
@@ -236,7 +236,7 @@ export default function MessagesPage() {
             <CardTitle className="text-lg">Resultado do envio</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
+            <Table className="min-w-[760px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Telefone ID</TableHead>

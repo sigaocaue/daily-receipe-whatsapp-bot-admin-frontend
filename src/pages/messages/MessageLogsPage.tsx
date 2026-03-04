@@ -32,10 +32,10 @@ export default function MessageLogsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-semibold">Logs de Mensagens</h2>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder="Filtrar status" />
           </SelectTrigger>
           <SelectContent>
@@ -56,7 +56,7 @@ export default function MessageLogsPage() {
           ))}
         </div>
       ) : (
-        <Table>
+        <Table className="min-w-[860px]">
           <TableHeader>
             <TableRow>
               <TableHead>Data</TableHead>

@@ -203,11 +203,11 @@ export default function RecipeEditorPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2">
-              <Button type="button" variant="outline" onClick={() => navigate("/recipes")}>
+            <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
+              <Button type="button" variant="outline" onClick={() => navigate("/recipes")} className="w-full sm:w-auto">
                 Cancelar
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
                 {isSubmitting ? "Salvando..." : "Salvar"}
               </Button>
             </div>

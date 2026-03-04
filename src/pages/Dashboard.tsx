@@ -100,12 +100,12 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="flex gap-3">
-        <Button onClick={handleGenerate} disabled={generating}>
+      <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+        <Button onClick={handleGenerate} disabled={generating} className="w-full sm:w-auto">
           <Sparkles className="mr-2 h-4 w-4" />
           {generating ? "Gerando..." : "Gerar nova receita"}
         </Button>
-        <Button variant="secondary" onClick={handleSend} disabled={sending}>
+        <Button variant="secondary" onClick={handleSend} disabled={sending} className="w-full sm:w-auto">
           <Send className="mr-2 h-4 w-4" />
           {sending ? "Enviando..." : "Enviar receita do dia"}
         </Button>
@@ -125,7 +125,7 @@ export default function Dashboard() {
           ) : recentLogs.length === 0 ? (
             <p className="text-sm text-muted-foreground">Nenhum envio registrado.</p>
           ) : (
-            <Table>
+            <Table className="min-w-[640px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Data</TableHead>

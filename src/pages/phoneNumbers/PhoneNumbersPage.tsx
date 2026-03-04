@@ -113,9 +113,9 @@ export default function PhoneNumbersPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-semibold">Números de Telefone</h2>
-        <Button onClick={handleNew}>
+        <Button onClick={handleNew} className="w-full sm:w-auto">
           <Plus className="mr-2 h-4 w-4" /> Novo Número
         </Button>
       </div>
@@ -127,7 +127,7 @@ export default function PhoneNumbersPage() {
           ))}
         </div>
       ) : (
-        <Table>
+        <Table className="min-w-[700px]">
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
