@@ -236,7 +236,7 @@ export default function MessagesPage() {
             <CardTitle className="text-lg">Resultado do envio</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table className="min-w-[760px]">
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Telefone ID</TableHead>

@@ -125,7 +125,7 @@ export default function RecipeEditorPage() {
 
   return (
     <div className="space-y-4">
-      <Button variant="outline" onClick={() => navigate("/recipes")}>
+      <Button variant="outline" onClick={() => navigate("/recipes")} className="w-full sm:w-auto">
         <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para receitas
       </Button>
 

@@ -125,7 +125,7 @@ export default function Dashboard() {
           ) : recentLogs.length === 0 ? (
             <p className="text-sm text-muted-foreground">Nenhum envio registrado.</p>
           ) : (
-            <Table className="min-w-[640px]">
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Data</TableHead>
