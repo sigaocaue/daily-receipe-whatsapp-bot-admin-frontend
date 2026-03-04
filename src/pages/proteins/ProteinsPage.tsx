@@ -38,7 +38,7 @@ export default function ProteinsPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
   function handleNew() {
@@ -59,7 +59,7 @@ export default function ProteinsPage() {
       await createProtein(data);
       toast.success("Proteína criada!");
     }
-    load();
+    await load();
   }
 
   async function handleDelete() {
@@ -67,7 +67,7 @@ export default function ProteinsPage() {
     try {
       await deleteProtein(deleteTarget.id);
       toast.success("Proteína removida!");
-      load();
+      await load();
     } catch {
       // handled by interceptor
     } finally {
