@@ -1,0 +1,195 @@
+import { useEffect, useState, useCallback } from "react";
+import { Plus, Pencil, Trash2, Sparkles } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { listRecipes, createRecipe, updateRecipe, deleteRecipe, generateRecipe } from "@/api/recipes";
+import { listProteins } from "@/api/proteins";
+import type { Recipe } from "@/types/recipe";
+import type { Protein } from "@/types/protein";
+import RecipeForm from "./RecipeForm";
+
+export default function RecipesPage() {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [proteins, setProteins] = useState<Protein[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState<Recipe | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Recipe | null>(null);
+  const [generating, setGenerating] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const [recipesData, proteinsData] = await Promise.all([listRecipes(), listProteins()]);
+      setRecipes(recipesData);
+      setProteins(proteinsData);
+    } catch {
+      // handled by interceptor
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  function proteinNames(ids: string[]) {
+    return ids
+      .map((id) => proteins.find((p) => p.id === id)?.name)
+      .filter(Boolean)
+      .join(", ");
+  }
+
+  function handleNew() {
+    setEditing(null);
+    setFormOpen(true);
+  }
+
+  function handleEdit(recipe: Recipe) {
+    setEditing(recipe);
+    setFormOpen(true);
+  }
+
+  async function handleFormSubmit(data: Omit<Recipe, "id" | "created_at" | "updated_at">) {
+    if (editing) {
+      await updateRecipe(editing.id, data);
+      toast.success("Receita atualizada!");
+    } else {
+      await createRecipe(data);
+      toast.success("Receita criada!");
+    }
+    load();
+  }
+
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    try {
+      await deleteRecipe(deleteTarget.id);
+      toast.success("Receita removida!");
+      load();
+    } catch {
+      // handled by interceptor
+    } finally {
+      setDeleteTarget(null);
+    }
+  }
+
+  async function handleGenerate() {
+    setGenerating(true);
+    try {
+      const recipe = await generateRecipe();
+      toast.success(`Receita "${recipe.title}" gerada!`);
+      load();
+    } catch {
+      // handled by interceptor
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Receitas</h2>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={handleGenerate} disabled={generating}>
+            <Sparkles className="mr-2 h-4 w-4" />
+            {generating ? "Gerando..." : "Gerar via IA"}
+          </Button>
+          <Button onClick={handleNew}>
+            <Plus className="mr-2 h-4 w-4" /> Nova Receita
+          </Button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="space-y-2">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Título</TableHead>
+              <TableHead>Proteínas</TableHead>
+              <TableHead>Fonte</TableHead>
+              <TableHead>IA</TableHead>
+              <TableHead>Criado em</TableHead>
+              <TableHead className="w-24">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {recipes.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-muted-foreground">
+                  Nenhuma receita cadastrada.
+                </TableCell>
+              </TableRow>
+            ) : (
+              recipes.map((r) => (
+                <TableRow key={r.id}>
+                  <TableCell className="font-medium">{r.title}</TableCell>
+                  <TableCell>{proteinNames(r.protein_ids) || "—"}</TableCell>
+                  <TableCell>{r.source_site || "—"}</TableCell>
+                  <TableCell>
+                    <Badge variant={r.ai_generated ? "default" : "secondary"}>
+                      {r.ai_generated ? "Sim" : "Não"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{new Date(r.created_at).toLocaleDateString("pt-BR")}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(r)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(r)}>
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      )}
+
+      <RecipeForm
+        open={formOpen}
+        onOpenChange={setFormOpen}
+        recipe={editing}
+        onSubmit={handleFormSubmit}
+      />
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Deseja remover a receita &quot;{deleteTarget?.title}&quot;? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}

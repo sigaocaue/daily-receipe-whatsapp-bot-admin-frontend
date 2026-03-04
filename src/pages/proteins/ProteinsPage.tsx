@@ -1,0 +1,160 @@
+import { useEffect, useState, useCallback } from "react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { listProteins, createProtein, updateProtein, deleteProtein } from "@/api/proteins";
+import type { Protein } from "@/types/protein";
+import ProteinForm from "./ProteinForm";
+
+export default function ProteinsPage() {
+  const [proteins, setProteins] = useState<Protein[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState<Protein | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Protein | null>(null);
+
+  const load = useCallback(async () => {
+    try {
+      const data = await listProteins();
+      setProteins(data);
+    } catch {
+      // handled by interceptor
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  function handleNew() {
+    setEditing(null);
+    setFormOpen(true);
+  }
+
+  function handleEdit(protein: Protein) {
+    setEditing(protein);
+    setFormOpen(true);
+  }
+
+  async function handleFormSubmit(data: { name: string; active: boolean }) {
+    if (editing) {
+      await updateProtein(editing.id, data);
+      toast.success("Proteína atualizada!");
+    } else {
+      await createProtein(data);
+      toast.success("Proteína criada!");
+    }
+    load();
+  }
+
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    try {
+      await deleteProtein(deleteTarget.id);
+      toast.success("Proteína removida!");
+      load();
+    } catch {
+      // handled by interceptor
+    } finally {
+      setDeleteTarget(null);
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Proteínas</h2>
+        <Button onClick={handleNew}>
+          <Plus className="mr-2 h-4 w-4" /> Nova Proteína
+        </Button>
+      </div>
+
+      {loading ? (
+        <div className="space-y-2">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Criado em</TableHead>
+              <TableHead className="w-24">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {proteins.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  Nenhuma proteína cadastrada.
+                </TableCell>
+              </TableRow>
+            ) : (
+              proteins.map((p) => (
+                <TableRow key={p.id}>
+                  <TableCell className="font-medium">{p.name}</TableCell>
+                  <TableCell>
+                    <Badge variant={p.active ? "default" : "secondary"}>
+                      {p.active ? "Ativo" : "Inativo"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{new Date(p.created_at).toLocaleDateString("pt-BR")}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(p)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(p)}>
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      )}
+
+      <ProteinForm
+        open={formOpen}
+        onOpenChange={setFormOpen}
+        protein={editing}
+        onSubmit={handleFormSubmit}
+      />
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Deseja remover a proteína &quot;{deleteTarget?.name}&quot;? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
