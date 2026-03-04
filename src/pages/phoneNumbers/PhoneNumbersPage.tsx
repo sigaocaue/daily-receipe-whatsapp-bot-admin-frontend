@@ -76,13 +76,8 @@ export default function PhoneNumbersPage() {
     void load();
   }, [load]);
 
-  function handleNew() {
-    navigate("/phone-numbers/new");
-  }
-
-  function handleEdit(pn: PhoneNumber) {
-    navigate(`/phone-numbers/${pn.id}/edit`);
-  }
+  const handleNew = () => navigate("/phone-numbers/new");
+  const handleEdit = (pn: PhoneNumber) => navigate(`/phone-numbers/${pn.id}/edit`);
 
   async function handleDelete() {
     if (!deleteTarget) return;

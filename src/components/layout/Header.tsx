@@ -36,13 +36,14 @@ export function Header() {
 }
 
 function getPageTitle(pathname: string) {
-  if (pathname === "/recipes/new") {
-    return "Nova Receita";
-  }
-
-  if (/^\/recipes\/[^/]+\/edit$/.test(pathname)) {
-    return "Editar Receita";
-  }
+  if (pathname === "/recipes/new") return "Nova Receita";
+  if (/^\/recipes\/[^/]+\/edit$/.test(pathname)) return "Editar Receita";
+  
+  if (pathname === "/proteins/new") return "Nova Proteína";
+  if (/^\/proteins\/[^/]+\/edit$/.test(pathname)) return "Editar Proteína";
+  
+  if (pathname === "/phone-numbers/new") return "Novo Número";
+  if (/^\/phone-numbers\/[^/]+\/edit$/.test(pathname)) return "Editar Número";
 
   return titles[pathname] || defaultTitle;
 }
