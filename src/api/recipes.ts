@@ -30,3 +30,10 @@ export async function generateRecipe() {
   const { data } = await api.post<ApiResponse<Recipe>>("/recipes/generate");
   return data.data;
 }
+
+export async function scrapeRecipe(url?: string) {
+  const { data } = await api.post<ApiResponse<Recipe>>("/recipes/scrape", {
+    url: url || null,
+  });
+  return data.data;
+}

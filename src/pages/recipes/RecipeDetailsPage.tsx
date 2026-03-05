@@ -67,9 +67,13 @@ export default function RecipeDetailsPage() {
         <CardHeader className="gap-3">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle>{recipe.title}</CardTitle>
-            <Badge variant={recipe.ai_generated ? "default" : "secondary"}>
-              {recipe.ai_generated ? "Gerada por IA" : "Manual"}
-            </Badge>
+            {recipe.ai_generated ? (
+              <Badge variant="default">Gerada por IA</Badge>
+            ) : recipe.source_site === "tudogostoso" ? (
+              <Badge variant="outline" className="border-orange-400 text-orange-600">TudoGostoso</Badge>
+            ) : (
+              <Badge variant="secondary">Manual</Badge>
+            )}
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -112,7 +116,7 @@ export default function RecipeDetailsPage() {
                 rel="noreferrer"
                 className="inline-flex items-center gap-1 text-primary hover:underline"
               >
-                Abrir fonte <ExternalLink className="h-3.5 w-3.5" />
+                {recipe.source_site === "tudogostoso" ? "Ver no TudoGostoso" : "Abrir fonte"} <ExternalLink className="h-3.5 w-3.5" />
               </a>
             ) : (
               <p>—</p>
