@@ -45,13 +45,29 @@
     input,
     textarea,
     select {
-      font-size: 16px;
+      font-size: 16px !important;
+      min-height: 44px;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      min-height: auto;
+      min-width: auto;
     }
 
     /* Prevent horizontal scroll on mobile */
     body,
     html {
       overflow-x: hidden;
+      -webkit-user-select: text;
+      -webkit-touch-callout: none;
+    }
+
+    /* Prevent zoom on input focus */
+    input:focus,
+    textarea:focus,
+    select:focus {
+      font-size: 16px !important;
     }
 
     /* Ensure dialogs don't overflow */
