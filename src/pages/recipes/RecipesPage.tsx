@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Plus, Pencil, Trash2, Sparkles } from "lucide-react";
+import { Plus, Pencil, Trash2, Sparkles, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -60,6 +60,10 @@ export default function RecipesPage() {
     navigate(`/recipes/${recipe.id}/edit`);
   }
 
+  function handleView(recipe: Recipe) {
+    navigate(`/recipes/${recipe.id}`);
+  }
+
   async function handleDelete() {
     if (!deleteTarget) return;
     try {
@@ -116,7 +120,7 @@ export default function RecipesPage() {
               <TableHead>Fonte</TableHead>
               <TableHead>IA</TableHead>
               <TableHead>Criado em</TableHead>
-              <TableHead className="w-24">Ações</TableHead>
+              <TableHead className="w-32">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -140,6 +144,9 @@ export default function RecipesPage() {
                   <TableCell>{new Date(r.created_at).toLocaleDateString("pt-BR")}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => handleView(r)}>
+                        <Eye className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(r)}>
                         <Pencil className="h-4 w-4" />
                       </Button>

@@ -38,6 +38,7 @@ export function Header() {
 function getPageTitle(pathname: string) {
   if (pathname === "/recipes/new") return "Nova Receita";
   if (/^\/recipes\/[^/]+\/edit$/.test(pathname)) return "Editar Receita";
+  if (/^\/recipes\/[^/]+$/.test(pathname)) return "Detalhes da Receita";
   
   if (pathname === "/proteins/new") return "Nova Proteína";
   if (/^\/proteins\/[^/]+\/edit$/.test(pathname)) return "Editar Proteína";
