@@ -5,6 +5,7 @@ import ProteinsPage from "@/pages/proteins/ProteinsPage";
 import ProteinEditorPage from "@/pages/proteins/ProteinEditorPage";
 import RecipesPage from "@/pages/recipes/RecipesPage";
 import RecipeEditorPage from "@/pages/recipes/RecipeEditorPage";
+import RecipeDetailsPage from "@/pages/recipes/RecipeDetailsPage";
 import PhoneNumbersPage from "@/pages/phoneNumbers/PhoneNumbersPage";
 import PhoneNumberEditorPage from "@/pages/phoneNumbers/PhoneNumberEditorPage";
 import MessagesPage from "@/pages/messages/MessagesPage";
@@ -20,6 +21,7 @@ export default function App() {
       <Route path="/proteins/:proteinId/edit" element={<ProteinEditorPage />} />
       <Route path="/recipes" element={<RecipesPage />} />
       <Route path="/recipes/new" element={<RecipeEditorPage />} />
+      <Route path="/recipes/:recipeId" element={<RecipeDetailsPage />} />
       <Route path="/recipes/:recipeId/edit" element={<RecipeEditorPage />} />
       <Route path="/phone-numbers" element={<PhoneNumbersPage />} />
       <Route path="/phone-numbers/new" element={<PhoneNumberEditorPage />} />
