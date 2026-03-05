@@ -11,8 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { listProteins, createProtein, updateProtein, getProteinById } from "@/api/proteins";
-import type { Protein } from "@/types/protein";
+import { createProtein, updateProtein, getProteinById } from "@/api/proteins";
 
 const schema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -138,11 +137,4 @@ export default function ProteinEditorPage() {
   );
 }
 
-async function getProteinById(id: string): Promise<Protein> {
-  const proteins = await listProteins();
-  const protein = proteins.find((p) => p.id === id);
-  if (!protein) {
-    throw new Error("Proteína não encontrada");
-  }
-  return protein;
-}
+

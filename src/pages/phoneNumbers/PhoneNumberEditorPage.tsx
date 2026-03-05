@@ -12,8 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { listPhoneNumbers, createPhoneNumber, updatePhoneNumber, getPhoneNumberById } from "@/api/phoneNumbers";
-import type { PhoneNumber } from "@/types/phoneNumber";
+import { createPhoneNumber, updatePhoneNumber, getPhoneNumberById } from "@/api/phoneNumbers";
 
 const schema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -246,11 +245,4 @@ export default function PhoneNumberEditorPage() {
   );
 }
 
-async function getPhoneNumberById(id: string): Promise<PhoneNumber> {
-  const phoneNumbers = await listPhoneNumbers();
-  const phoneNumber = phoneNumbers.find((p) => p.id === id);
-  if (!phoneNumber) {
-    throw new Error("Número não encontrado");
-  }
-  return phoneNumber;
-}
+
