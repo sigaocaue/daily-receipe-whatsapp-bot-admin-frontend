@@ -1,126 +1,69 @@
-# Setup — Daily Recipe WhatsApp Bot Admin Frontend
+# Setup técnico — Daily Recipe WhatsApp Bot Admin Frontend
 
-Guia passo a passo para configurar e executar o projeto localmente.
+## 1. Pré-requisitos
 
-## Pré-requisitos
+- **Node.js** 24.13.1 (conforme `.nvmrc`; o projeto utiliza recursos modernos do Vite 6 e React 19).
+- **npm** compatível com a versão do Node selecionada.
+- **Backend do Daily Recipe WhatsApp Bot** rodando e com as rotas expostas (`/recipes`, `/proteins`, `/phone-numbers`, `/messages`) acessíveis na URL informada em `VITE_API_BASE_URL`.
 
-- **Node.js** v24+ (confira o `.nvmrc`)
-- **npm** (incluído com Node.js)
-- **Backend** do Daily Recipe WhatsApp Bot rodando localmente (padrão: `http://localhost:8000`)
-
-## 1. Clonar o repositório
-
-```bash
-git clone <url-do-repositorio>
-cd daily-receipe-whatsapp-bot-admin-frontend
-```
-
-## 2. Configurar versão do Node
-
-Se estiver usando [nvm](https://github.com/nvm-sh/nvm):
-
-```bash
-nvm install
-nvm use
-```
-
-Isso vai usar a versão definida no `.nvmrc` (v24.13.1).
-
-## 3. Instalar dependências
+## 2. Instalação
 
 ```bash
 npm install
 ```
 
-## 4. Configurar variáveis de ambiente
+## 3. Variáveis de ambiente
 
-Copie o arquivo de exemplo e ajuste conforme necessário:
+1. Copie o exemplo:
 
-```bash
-cp .env.example .env
-```
+   ```bash
+   cp .env.example .env
+   ```
 
-### Variáveis
+2. Ajuste a variável disponível:
 
-| Variável | Descrição | Padrão |
-|----------|-----------|--------|
-| `VITE_API_BASE_URL` | URL base da API backend | `http://localhost:8000` |
+   | Variável | Descrição | Exemplo |
+   | --- | --- | --- |
+   | `VITE_API_BASE_URL` | URL base usada pelo Axios em `src/api/axios.ts`. | `http://localhost:8000` |
 
-> **Nota:** A URL base já inclui o prefixo `/api/v1/` na configuração padrão do `.env`. Ajuste conforme a configuração do seu backend.
+3. Atualize o valor conforme o endereço em que o backend estiver disponível. Não há outras variáveis obrigatórias no repositório.
 
-## 5. Iniciar o servidor de desenvolvimento
+## 4. Execução
 
-```bash
-npm run dev
-```
+- **Modo desenvolvimento** (hot reload):
 
-O Vite irá iniciar o servidor de desenvolvimento com hot reload. Acesse no navegador o endereço exibido no terminal (geralmente `http://localhost:5173`).
+  ```bash
+  npm run dev
+  ```
 
-## 6. Build de produção
+  Abra o navegador em `http://localhost:5173` (porta padrão do Vite) para acessar o painel.
 
-```bash
-npm run build
-```
+- **Build de produção**:
 
-Os arquivos otimizados serão gerados na pasta `dist/`. Para testar o build localmente:
+  ```bash
+  npm run build
+  ```
 
-```bash
-npm run preview
-```
+  Os arquivos otimizados são emitidos em `dist/`.
 
-## Configuração do Backend
+- **Preview do build** (para testar arquivos gerados):
 
-Este frontend depende do backend **Daily Recipe WhatsApp Bot** rodando e acessível na URL configurada em `VITE_API_BASE_URL`.
+  ```bash
+  npm run preview
+  ```
 
-Certifique-se de que o backend está:
-1. Instalado e configurado
-2. Rodando na porta esperada (padrão: 8000)
-3. Com as rotas da API (`/api/v1/`) acessíveis
+## 5. Testes
 
-Consulte o repositório do backend para instruções de setup.
+- **Lint** (verifica padrões configurados no ESLint):
 
-## Solução de Problemas
+  ```bash
+  npm run lint
+  ```
 
-### Erro de conexão com a API
+  Não existem suites automatizados além do lint neste projeto.
 
-- Verifique se o backend está rodando
-- Confirme a URL em `.env` (`VITE_API_BASE_URL`)
-- Verifique se há problemas de CORS no backend
+## 6. Observações adicionais
 
-### Versão do Node incompatível
-
-```bash
-nvm install
-nvm use
-node -v  # Deve mostrar v24.x
-```
-
-### Dependências desatualizadas
-
-```bash
-rm -rf node_modules package-lock.json
-npm install
-```
-
-## Estrutura de Pastas (Referência)
-
-```
-.
-├── public/               # Arquivos estáticos
-├── src/                  # Código-fonte
-│   ├── api/              # Chamadas HTTP
-│   ├── components/       # Componentes React
-│   │   ├── layout/       # Layout principal
-│   │   └── ui/           # Componentes shadcn/ui
-│   ├── pages/            # Páginas da aplicação
-│   ├── store/            # Estado global (Zustand)
-│   ├── types/            # Tipos TypeScript
-│   └── lib/              # Utilitários
-├── .env.example          # Exemplo de variáveis de ambiente
-├── .nvmrc                # Versão do Node
-├── components.json       # Config shadcn/ui
-├── tailwind.config.ts    # Config Tailwind CSS
-├── tsconfig.json         # Config TypeScript
-├── vite.config.ts        # Config Vite
-└── package.json          # Dependências e scripts
-```
+- O painel depende do backend responder nas rotas padrão com o prefixo `/api/v1/` ou conforme configurado em `VITE_API_BASE_URL`.
+- O arquivo `.env.example` define `http://localhost:8000` como base; altere-o caso o backend esteja em outro host/porta.
+- O dashboard e as páginas de recursos consomem os endpoints de proteínas, receitas, telefones e mensagens para realizar operações CRUD, geração via IA e envio de mensagens.
